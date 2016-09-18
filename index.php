@@ -7,6 +7,11 @@ require_once('includes.php');
 if(function_exists($_GET['route'])){
 	// sleep(3);
 	echo Utils::to_json($_GET['route']());
+} else {
+	echo Utils::to_json([
+		"status" :0,
+		"message" : "You have reached here because you're finding something"
+	]);
 }
 
 function get_list(){
