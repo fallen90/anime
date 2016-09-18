@@ -1,17 +1,51 @@
 <?php
-ini_set('max_execution_time',0);
-header('Content-Type: application/json');
+if(isset($_GET['route'])){
+	ini_set('max_execution_time',0);
+	header('Content-Type: application/json');
+	require_once('includes.php');
 
-require_once('includes.php');
-
-if(function_exists($_GET['route'])){
-	// sleep(3);
-	echo Utils::to_json($_GET['route']());
+	if(function_exists($_GET['route'])){
+		// sleep(3);
+		echo Utils::to_json($_GET['route']());
+	} else {
+		echo Utils::to_json([
+			"status" => 0,
+			"message" =>  "You have reached here because you're finding something"
+		]);
+	}
 } else {
-	echo Utils::to_json([
-		"status" :0,
-		"message" : "You have reached here because you're finding something"
-	]);
+	$q = @get_random_quote();
+	?>
+	<style>
+		div {
+			text-align:center;
+			width:50%;
+			margin-top:15%;
+			padding-top:50px;
+			padding-bottom:50px;
+			padding-left:20px;
+			padding-right:20px;
+			font-size:25px;
+			display:block;
+			background:rgba(255,255,255,0.67);
+		}
+		div cite {
+			font-size:15px;
+			text-align:right;
+		}
+		body {
+			background-image:url('http://lorempixel.com/1024/768/');
+			background-size:cover;
+			background-color:black;
+		}
+	</style>
+		<center>
+			<div>
+				<blockquote><?=@$q->{'quoteText'}?></blockquote>
+				<cite><?=@'-' . $q->{'quoteAuthor'}?></cite>
+			</div>
+		</center>
+	<?php
 }
 
 function get_list(){
@@ -58,4 +92,10 @@ function get_anime_details($id){
 			return $anime;
 		}
 	}
+}
+
+function get_random_quote(){
+	$url = "https://crossorigin.me/http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en";
+	$quote = file_get_contents($url);
+	return json_decode($quote);
 }
