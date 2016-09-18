@@ -35,7 +35,7 @@ function get_episode_videos(){
 	$direct = (Request::input('direct')) ? Request::input('direct') : false;
 	$episode_id = Request::input('episode_id');
 	$anime_id = Request::input('anime_id');
-	$episodes = Cache::remember('get_episode_videos_' + $episode_id, function() use ($episode_id, $direct){
+	$episodes = Cache::remember('get_episode_videos_' . $episode_id, function() use ($episode_id, $direct){
 		return Animania::getEpisodeVideos($episode_id, $direct);
 	});
 	$details = get_anime_details($anime_id);
