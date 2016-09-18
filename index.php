@@ -16,6 +16,7 @@ if(isset($_GET['route'])){
 } else {
 	$q = @get_random_quote();
 	?>
+	<title>Quotes</title>
 	<style>
 		div {
 			text-align:center;
@@ -45,6 +46,11 @@ if(isset($_GET['route'])){
 				<cite><?='-' . @$q->{'quoteAuthor'}?></cite>
 			</div>
 		</center>
+	<script>
+		setTimeout(function(){
+			window.location.href = "./";
+		}, 5000);
+	</script>
 	<?php
 }
 
