@@ -42,7 +42,7 @@ if(isset($_GET['route'])){
 		<center>
 			<div>
 				<blockquote><?=@$q->{'quoteText'}?></blockquote>
-				<cite><?=@'-' . $q->{'quoteAuthor'}?></cite>
+				<cite><?='-' . @$q->{'quoteAuthor'}?></cite>
 			</div>
 		</center>
 	<?php
