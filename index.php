@@ -49,7 +49,7 @@ if(isset($_GET['route'])){
 	<script>
 		setTimeout(function(){
 			window.location.href = "./";
-		}, 5000);
+		}, 30000);
 	</script>
 	<?php
 }
@@ -77,14 +77,29 @@ function get_anime(){
 }
 
 function get_episode_videos(){
-	$direct = (Request::input('direct')) ? Request::input('direct') : false;
+	$direct = (Request::input('direct')) ? +Request::input('direct') : false;
 	$episode_id = Request::input('episode_id');
 	$anime_id = Request::input('anime_id');
-	$episodes = Cache::remember('get_episode_videos_' . $episode_id, function() use ($episode_id, $direct){
-		return Animania::getEpisodeVideos($episode_id, $direct);
+
+	// $episodes = Cache::remember('get_episode_videos_' . $episode_id, function() use ($episode_id, $direct){
+	// 	return Animania::getEpisodeVideos($episode_id, $direct);
+	// });
+	$episodes = Cache::remember('get_episodes_' . $anime_id, function() use ($anime_id){
+		return Animania::getAnimeEpisodes($anime_id);
 	});
+
+	foreach($episodes->episode as $key=>$episode) {
+		$cacheKey = 'get_videos_' . $episode->id . '_' . (($direct) ? 'direct' : 'watch');
+
+		$videos = Cache::remember($cacheKey, function() use ($episode, $direct){
+			return Animania::getEpisodeVideos($episode->id, $direct);
+		});
+
+		$episodes->episode[$key]->{'videos'} = $videos;
+	}
+
 	$details = get_anime_details($anime_id);
-	$details->{'videos'} = $episodes;
+	$details->{'episodes'} = $episodes->episode;
 	return $details;
 }
 

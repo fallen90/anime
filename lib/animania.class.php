@@ -23,8 +23,12 @@ class Animania {
 			foreach($videos_raw as $v){
 				$videos[] = $v->url;
 			}
+		} else {
+			foreach($videos_raw[0] as $v){
+				$videos[] = $v->link;
+			}
 		}
-		return array_values(array_unique($videos));
+		return (array_values(array_unique($videos)));
 	}
 	private static function getEndPoint($endpoint){
 		$url = 'http://' . self::$API_BASE_URL . '/' . $endpoint;
